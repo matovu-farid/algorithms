@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "name": "Python: Algorithns",
+      "type": "python",
+      "request": "launch",
+      "program": "main.py",
+      "justMyCode": true,
+      "console": "integratedTerminal",
+      
+     
+    }
+  ]
+}
