@@ -38,11 +38,10 @@ int main() {
   vector<int> v = {1,1, 2, 3, 4, 5};
   vector<string> m = {"a", "b", "c", "d"};
   vector<vector<string>>n(5,m);
-  vector<vector<vector<string>>>x(5,n);
-  map<string, int> mp = {
-    {"farid", 1},
-    {"matovu", 2},
-    {"nkoba", 3}
+  map<string, vector<int>> mp = {
+    {"farid", v},
+    {"matovu", v},
+    {"nkoba", v}
   };
   set<int> st(v.begin(), v.end());
   print(m);
@@ -50,7 +49,6 @@ int main() {
   print(n);
   print(st);
   print(mp);
-  print(x);
 
   return 0;
 }

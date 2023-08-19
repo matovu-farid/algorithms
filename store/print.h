@@ -29,7 +29,9 @@ template<class K, class T>
 void print(pair<K,T> t){
     K key = t.first;
     T val = t.second;
-  cout << key << ": " << val <<endl;
+  print(key);
+  cout  << ": " ;
+  print(val);
 }
 template<class K, class T>
 void print(map<K,T> t){
