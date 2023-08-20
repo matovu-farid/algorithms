@@ -1,4 +1,3 @@
-#include "store/print.h"
 #include <algorithm>
 #include <iostream>
 #include <queue>
@@ -6,6 +5,7 @@
 #include <unordered_set>
 #include <vector>
 using namespace std;
+
 int solve(int n, vector<int> &primes) {
   int m = primes.size();
   vector<int> indices( m, 0);
@@ -25,18 +25,4 @@ int solve(int n, vector<int> &primes) {
   return dp[n - 1];
 }
 
-int main() {
-  freopen("input.txt", "r", stdin);
-  freopen("output.txt", "w", stdout);
-  freopen("output.txt", "w", stderr);
-  int n, d;
-  cin >> n;
-  cin >> d;
-  vector<int> primes;
-  for (int i = 0; i < d; i++) {
-    int x;
-    cin >> x;
-    primes.push_back(x);
-  }
-  cout << solve(n, primes) << endl;
-}
+

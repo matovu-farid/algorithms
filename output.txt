@@ -1,13 +1,1 @@
-a b c d 
-1 1 2 3 4 5 
-a b c d 
-a b c d 
-a b c d 
-a b c d 
-a b c d 
-
-1 2 3 4 5 
-farid : 1 1 2 3 4 5 
-matovu : 1 1 2 3 4 5 
-nkoba : 1 1 2 3 4 5 
-
+32
