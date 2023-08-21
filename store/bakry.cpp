@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <vector>
 
@@ -47,9 +48,6 @@ string can_partition(int n, int k, const vector<int>& values, const vector<pair<
 }
 
 int main() {
-    freopen("input.txt", "r", stdin);
-  freopen("output.txt", "w", stdout);
-  freopen("output.txt", "w", stderr);
     int t;
     cin >> t;
     while (t--) {
@@ -67,4 +65,3 @@ int main() {
     }
     return 0;
 }
-
