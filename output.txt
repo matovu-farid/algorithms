@@ -5,3 +5,5 @@ How big should the array be
 4
 1 2 100 3 
 4
+1 2 3 
+3

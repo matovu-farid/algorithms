@@ -42,6 +42,8 @@ int main() {
   m.insert(2, 100);
   m.print();
   cout << m.length << endl;
-  
+    m.remove(2);
+  m.print();
+  cout << m.length << endl;
   
 }

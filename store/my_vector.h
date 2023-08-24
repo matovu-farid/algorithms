@@ -23,6 +23,11 @@ template <typename T> struct my_vector {
     *(ptr + length) = a;
     length += 1;
   }
+  void remove(int index){
+
+    copy(ptr, index + 1, capacity, -1);
+    length -= 1;
+  }
   T pop() {
     T val = *(ptr + length);
     *(ptr + length) = 0;
@@ -30,9 +35,9 @@ template <typename T> struct my_vector {
     return val;
   }
   void insert(int index, int value) {
-    capacity += 1;
 
     int temp_capacity = capacity;
+    capacity += 1;
     T *next_ptr = new T[capacity];
     copy(next_ptr, 0, index);
     *(next_ptr + index) = value;
