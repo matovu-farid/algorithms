@@ -33,4 +33,8 @@ int main() {
   for (int i = 0; i < n; i++)
     m.add(i);
   m.print();
+  cout << m.length << endl;
+  m.pop();
+  m.print();
+  cout << m.length << endl;
 }

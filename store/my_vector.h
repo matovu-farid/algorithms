@@ -13,6 +13,8 @@ template <typename T> struct my_vector {
     length += 1;
   }
   void pop(){
+    *(ptr + length) = 0;
+    length -= 1;
 
   }
   void print() {
