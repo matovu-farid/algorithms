@@ -27,11 +27,13 @@ int main() {
   cout << "How big should the array be" << endl;
   int n;
   cin >> n;
+  int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  my_vector<int> v {arr, 5};
+  v.end();
 
-  
-  my_vector<int> m;
-  for (int i = 0; i < n; i++)
-    m.push(i);
+
+  my_vector<int> m{v.begin(), v.end()};
+
   m.print();
   cout << m.length << endl;
   m.pop();
@@ -40,4 +42,6 @@ int main() {
   m.insert(2, 100);
   m.print();
   cout << m.length << endl;
+  
+  
 }
