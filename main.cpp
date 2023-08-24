@@ -31,10 +31,13 @@ int main() {
   
   my_vector<int> m;
   for (int i = 0; i < n; i++)
-    m.add(i);
+    m.push(i);
   m.print();
   cout << m.length << endl;
   m.pop();
+  m.print();
+  cout << m.length << endl;
+  m.insert(2, 100);
   m.print();
   cout << m.length << endl;
 }
