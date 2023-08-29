@@ -23,7 +23,7 @@ template <typename T> struct my_vector {
     *(ptr + length) = a;
     length += 1;
   }
-  void remove(int index){
+  void remove(int index) {
 
     copy(ptr, index + 1, capacity, -1);
     length -= 1;

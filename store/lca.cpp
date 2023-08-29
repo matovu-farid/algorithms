@@ -1,7 +1,3 @@
-// freopen("input.txt", "r", stdin);
-// freopen("output.txt", "w", stdout);
-
-#include "store/print.h"
 #include <cmath>
 #include <iostream>
 #include <string>
@@ -35,10 +31,7 @@ void initGraph(vector<vector<int>> edges) {
 vector<int> LCA(int n, vector<vector<int>> edges, vector<vector<int>> queries) {
   vector<int> res;
   initGraph(edges);
-  for (auto i = 1; i <= n; i++) {
-    cout << i << " -> ";
-    print(graph[i]);
-  }
+ 
   depth[0] = -1;
   dfs(1, 0);
   for (auto query : queries) {
@@ -71,31 +64,4 @@ vector<int> LCA(int n, vector<vector<int>> edges, vector<vector<int>> queries) {
   }
 
   return res;
-}
-
-int main() {
-  freopen("input.txt", "r", stdin);
-  freopen("output.txt", "w", stdout);
-  int n;
-  vector<vector<int>> edges;
-  vector<vector<int>> queries;
-  cin >> n;
-  for (int i = 0; i < n - 1; i++) {
-    int u;
-    int v;
-    cin >> u >> v;
-    vector<int> edge{u, v};
-    edges.push_back(edge);
-  }
-  int q;
-  cin >> q;
-  for (int i = 0; i < q; i++) {
-    int node1;
-    int node2;
-    cin >> node1 >> node2;
-    vector<int> query{node1, node2};
-    queries.push_back(query);
-  }
-  auto res = LCA(n, edges, queries);
-  print(res);
 }
