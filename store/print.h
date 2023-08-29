@@ -14,8 +14,16 @@ template<typename T>
 void print(vector<T>& t){
   for (auto i : t ){
     print(i);
+    }
+    cout << endl;
   }
-  cout << endl;
+  template<typename T>
+  void print(vector<T> t[], int n){
+        for (int i = 1; i <= n; i++){
+          cout << i << " -> ";
+          print(t[i]);
+    }
+
 }
 
 template<typename T>
