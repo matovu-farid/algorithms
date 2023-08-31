@@ -7,26 +7,56 @@
 
 using namespace std;
 
-void findSubsets(string s, int n) {
-  
-  for (int mask = 0; mask < (1 << n); mask++ ){
-    string subset = "";
-    for (int i = 0; i < n; i++){
-      if (mask & (1 << i)){
-        subset += s[i];
-      }
-    }
-    cout << subset << " ";
+const int N = 100;
+string board[N][N];
+const string QUEEN = "👑";
+const string BLANK = "🟩";
+bool canPlace(int r, int c, int n) {
+  for (int i = 0; i < n; i++) {
+    if (board[r][i] == QUEEN || board[i][c] == QUEEN) return false;
   }
-  cout << endl;
+  for (int i = r, j = c; i >= 0 && j >= 0; i--, j--) {
+    if (board[i][j] == QUEEN) return false;
+  }
+  for (int i = r, j = c; i < n && j >= 0; i++, j--) {
+    if (board[i][j] == QUEEN) return false;
+  }
+  return true;
 }
 
+void getAllValidConfigs(int i, int n) {
+  if (i == n) {
+    for (int r = 0; r < n; r++) {
+      for (int c = 0; c < n; c++) {
+        cout << board[r][c] << " ";
+      }
+      cout << endl;
+    }
+    cout << endl;
+    return;
+  }
+  for (int r = 0; r < n; r++) {
+    if (!canPlace(r, i, n)) 
+      continue;
+    
+    board[r][i] = QUEEN;
+    getAllValidConfigs(i + 1, n);
+    board[r][i] = BLANK;
+  }
+}
+
+using namespace std;
+
 void solve() {
-  string s;
-  cin >> s;
-  const int n = s.length();
-  
-  findSubsets(s, n);
+  int n;
+  cin >> n;
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      board[i][j] = BLANK;
+    }
+  }
+  getAllValidConfigs(0, n);
+  cout << endl;
 }
 
 int main() {
@@ -34,6 +64,8 @@ int main() {
   freopen("input.txt", "r", stdin);
   freopen("output.txt", "w", stdout);
 #endif
+  ios::sync_with_stdio(0);
+  cin.tie(0);
 
   int tests;
   cin >> tests;
