@@ -1,7 +1,7 @@
 // freopen("input.txt", "r", stdin);
 // freopen("output.txt", "w", stdout);
 #ifndef ONLINE_JUDGE
- #include "store/print.h"
+#include "store/print.h"
 #endif
 
 #include <iostream>
@@ -10,52 +10,61 @@
 using namespace std;
 typedef long long ll;
 
-vector<vector<int>> g;
-vector<ll> leaf_count;
-
-
-void dfs(int v, int p) {
-  if (g[v].size() == 1 && g[v][0] == p) {
-    leaf_count[v] = 1;
-  } else {
-    for (auto u : g[v]) {
-      if (u != p) {
-        dfs(u, v);
-        leaf_count[v] += leaf_count[u];
-      }
+template<typename T>
+struct fenwick {
+  vector<T> tree;
+  T n;
+  fenwick(T n) {
+    this->n = n + 1;
+    tree.resize(this->n, 0);
+  }
+  fenwick(T n, vector<T>& v) {
+    this->n = n + 1;
+    tree.resize(this->n, 0);
+    for (T i = 1; i < this->n; i++)
+      update(i, v[i - 1]);
+  }
+  void update(T idx, T val){
+    while (idx < n){
+      tree[idx] += val;
+      idx += (idx & -idx);
     }
   }
-}
+  T query(T idx){
+    T res = 0;
+
+    while (idx > 0 ){
+      res += tree[idx];
+      idx -= (idx & -idx);
+    }
+     return res;
+  }
+  T query_range(T l, T r) { return query(r) - query(l - 1); }
+
+}; 
+
+vector<int> nums;
+
+
 
 void solve() {
-  int n, q;
+  int n;
   cin >> n;
-
-  g.assign(n, vector<int>());
-  g.reserve(n);
-
-  for (int i = 0; i < n - 1; i++) {
-    int u, v;
-    cin >> u >> v;
-    u--;
-    v--;
-    g[u].push_back(v);
-    g[v].push_back(u);
+  for (int i = 0; i < n; i++) {
+    int a;
+    cin >> a;
+    nums.push_back(a);
   }
+   fenwick<int> tree(n, nums); 
 
-  leaf_count.assign(n, 0);
-  leaf_count.reserve(n);
-  dfs(0, -1);
-
+  int q;
   cin >> q;
-  for (int i = 0; i < q; i++) {
-    int c, k;
-    cin >> c >> k;
-    c--;
-    k--;
-
-    ll res = leaf_count[c] * leaf_count[k];
-    cout << res << endl;
+  while (q--) {
+    int l;
+    int r;
+    cin >> l >> r;
+    int v = tree.query_range(l, r);
+    cout << v << endl;
   }
 }
 
