@@ -32,28 +32,24 @@ bool canPlace(int row, int col, int num) {
         return false;
   return true;
 }
-bool solveSudoku(int i, int j) {
-  if (i == N) {
+bool solveSudoku(int row, int col) {
+  if (row == N) {
     printBoard();
     return true;
   }
-  int next_col = j + 1;
-  int next_row = i;
-  if (next_col == N) {
-    next_col = 0;
-    next_row += 1;
-  }
+  if (col == N)
+    return solveSudoku(row + 1, 0);
 
-  if (board[i][j]) {
-    return solveSudoku(next_row, next_col);
-  }
+  if (board[row][col])
+    return solveSudoku(row, col + 1);
+
   for (int num = 1; num <= N; num++) {
-    if (!canPlace(i, j, num))
+    if (!canPlace(row, col, num))
       continue;
-    board[i][j] = num;
-    if (solveSudoku(next_row, next_col))
+    board[row][col] = num;
+    if (solveSudoku(row, col + 1))
       return true;
-    board[i][j] = 0;
+    board[row][col] = 0;
   }
   return false;
 }
