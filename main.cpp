@@ -1,3 +1,4 @@
+#include <cstdio>
 #ifndef ONLINE_JUDGE
 #include "store/print.h"
 #endif
@@ -40,19 +41,21 @@ bool canPlace(int r, int c, int n) {
   return true;
 }
 
-void getAllValidConfigs(int col, int n) {
+bool getAllValidConfigs(int col, int n) {
   if (col == n) {
     printBoard(n);
-    return;
+    return true;
   }
   for (int row = 0; row < n; row++) {
     if (!canPlace(row, col, n))
       continue;
 
     board[row][col] = QUEEN;
-    getAllValidConfigs(col + 1, n);
+    bool success = getAllValidConfigs(col + 1, n);
+    if (success) return true;
     board[row][col] = BLANK;
   }
+  return false;
 }
 
 void solve() {
