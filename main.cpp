@@ -3,34 +3,40 @@
 #endif
 
 #include <iostream>
+#include <unordered_map>
 #include <vector>
 
 using namespace std;
 
 const int N = 100;
-string board[N][N];
-const string QUEEN = "👑";
-const string BLANK = "🟩";
+int board[N][N];
+const int QUEEN = 1;
+const int BLANK = 0;
 
-void printBoard(int n){
-    for (int r = 0; r < n; r++) {
-      for (int c = 0; c < n; c++) {
-        cout << board[r][c] << " ";
-      }
-      cout << endl;
+void printBoard(int n) {
+  unordered_map<int, string> map = {{1 , "👑"} ,{0 , "🟩"}};
+
+  for (int r = 0; r < n; r++) {
+    for (int c = 0; c < n; c++) {
+      cout << map[board[r][c]] << " ";
     }
     cout << endl;
+  }
+  cout << endl;
 }
 bool canPlace(int r, int c, int n) {
-  for (int i = 0; i < n; i++) 
-    if (board[r][i] == QUEEN || board[i][c] == QUEEN) return false;
-  
-  for (int i = r, j = c; i >= 0 && j >= 0; i--, j--) 
-    if (board[i][j] == QUEEN) return false;
-  
-  for (int i = r, j = c; i < n && j >= 0; i++, j--) 
-    if (board[i][j] == QUEEN) return false;
-  
+  for (int i = 0; i < n; i++)
+    if (board[r][i] == QUEEN )
+      return false;
+
+  for (int i = r, j = c; i >= 0 && j >= 0; i--, j--)
+    if (board[i][j] == QUEEN)
+      return false;
+
+  for (int i = r, j = c; i < n && j >= 0; i++, j--)
+    if (board[i][j] == QUEEN)
+      return false;
+
   return true;
 }
 
@@ -40,15 +46,14 @@ void getAllValidConfigs(int col, int n) {
     return;
   }
   for (int row = 0; row < n; row++) {
-    if (!canPlace(row, col, n)) 
+    if (!canPlace(row, col, n))
       continue;
-    
+
     board[row][col] = QUEEN;
     getAllValidConfigs(col + 1, n);
     board[row][col] = BLANK;
   }
 }
-
 
 void solve() {
   int n;
