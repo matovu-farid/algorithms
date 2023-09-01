@@ -40,22 +40,21 @@ bool canPlace(int r, int c, int n) {
 
   return true;
 }
-
-bool getAllValidConfigs(int col, int n) {
+void getAllValidConfigs(int col, int n,int* count, int limit=4) {
+  if (*count >= limit) return;
   if (col == n) {
     printBoard(n);
-    return true;
+    (*count) += 1;
+    return ;
   }
   for (int row = 0; row < n; row++) {
     if (!canPlace(row, col, n))
       continue;
 
     board[row][col] = QUEEN;
-    bool success = getAllValidConfigs(col + 1, n);
-    if (success) return true;
+    getAllValidConfigs(col + 1, n,count, limit);
     board[row][col] = BLANK;
   }
-  return false;
 }
 
 void solve() {
@@ -66,7 +65,9 @@ void solve() {
       board[i][j] = BLANK;
     }
   }
-  getAllValidConfigs(0, n);
+  int count = 0;
+  int *countPointer = &count;
+  getAllValidConfigs(0, n, countPointer, 5);
   cout << endl;
 }
 
