@@ -34,22 +34,21 @@ bool canPlace(int r, int c, int n) {
   return true;
 }
 
-void getAllValidConfigs(int i, int n) {
-  if (i == n) {
+void getAllValidConfigs(int col, int n) {
+  if (col == n) {
     printBoard(n);
     return;
   }
-  for (int r = 0; r < n; r++) {
-    if (!canPlace(r, i, n)) 
+  for (int row = 0; row < n; row++) {
+    if (!canPlace(row, col, n)) 
       continue;
     
-    board[r][i] = QUEEN;
-    getAllValidConfigs(i + 1, n);
-    board[r][i] = BLANK;
+    board[row][col] = QUEEN;
+    getAllValidConfigs(col + 1, n);
+    board[row][col] = BLANK;
   }
 }
 
-using namespace std;
 
 void solve() {
   int n;
