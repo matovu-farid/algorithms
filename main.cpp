@@ -1,44 +1,29 @@
-#include <unordered_set>
+#include <climits>
+#include <ios>
 #ifndef ONLINE_JUDGE
 #include "store/print.h"
 #endif
 
+#include <iomanip>
 #include <iostream>
 #include <vector>
+using ll = long long;
 
+long long fib(ll n, vector<ll> &memo) {
+  if (memo[n] != -1)
+    return memo[n];
+  if (n <= 2)
+    return 1;
+  memo[n] = fib(n - 1, memo) + fib(n - 2, memo);
+  return memo[n];
+}
 using namespace std;
 
-bool dfs(int node, int n,const vector<int> graph[], unordered_set<int>& visited){
-  if (visited.find(node) != visited.end()) return false;
-  visited.insert(node);
-  if (visited.size() == n) return true;
-  for (int neighbour: graph[node]){
-    if (visited.find(neighbour) != visited.end()) continue;
-    if (dfs(neighbour,n, graph, visited)) return true;
-  }
-  visited.erase(node);
-  return false;
-}
-bool isHamiltonPath(vector<int> graph[], int n){
-  unordered_set<int> visited;
-  for (int node = 0; node < n; node++){
-    if (dfs(node,n, graph, visited)) return true;
-  }
-  return false;
-}
-
 void solve() {
-  int n, m;
-  cin >> n >> m;
-  vector<int> graph[n];
-  for (int i = 0; i < m; i++){
-    int u, v;
-    cin >> u >> v;
-    graph[u].push_back(v);
-    graph[v].push_back(u);
-
-  }
-  cout <<isHamiltonPath(graph, n) << endl;
+  int n;
+  cin >> n;
+  vector<ll> memo(n + 1, -1);
+  cout << (long double)fib(n, memo) << endl;
 }
 
 int main() {
@@ -46,6 +31,8 @@ int main() {
   freopen("input.txt", "r", stdin);
   freopen("output.txt", "w", stdout);
 #endif
+  cout.precision(3);
+
   ios::sync_with_stdio(0);
   cin.tie(0);
 
