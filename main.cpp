@@ -1,3 +1,4 @@
+#include <unordered_set>
 #ifndef ONLINE_JUDGE
 #include "store/print.h"
 #endif
@@ -6,61 +7,38 @@
 #include <vector>
 
 using namespace std;
-const int N = 9;
-int board[N][N];
 
-void printBoard() {
-  for (int i = 0; i < N; i++) {
-    for (int j = 0; j < N; j++) {
-      cout << board[i][j] << " ";
-    }
-    cout << endl;
+bool dfs(int node, int n,const vector<int> graph[], unordered_set<int>& visited){
+  if (visited.find(node) != visited.end()) return false;
+  visited.insert(node);
+  if (visited.size() == n) return true;
+  for (int neighbour: graph[node]){
+    if (visited.find(neighbour) != visited.end()) continue;
+    if (dfs(neighbour,n, graph, visited)) return true;
   }
+  visited.erase(node);
+  return false;
 }
-
-bool canPlace(int row, int col, int num) {
-  for (int i = 0; i < N; i++)
-    if (board[i][col] == num || board[row][i] == num)
-      return false;
-  int rowIdx = row / 3;
-  int colIdx = col / 3;
-  int startRow = rowIdx * 3;
-  int startCol = colIdx * 3;
-  for (int i = startRow; i < startRow + 3; i++)
-    for (int j = startCol; j < startCol + 3; j++)
-      if (board[i][j] == num)
-        return false;
-  return true;
-}
-bool solveSudoku(int row, int col) {
-  if (row == N)
-    return true;
-
-  if (col == N)
-    return solveSudoku(row + 1, 0);
-
-  if (board[row][col])
-    return solveSudoku(row, col + 1);
-
-  for (int num = 1; num <= N; num++) {
-    if (!canPlace(row, col, num))
-      continue;
-    board[row][col] = num;
-    if (solveSudoku(row, col + 1))
-      return true;
-    board[row][col] = 0;
+bool isHamiltonPath(vector<int> graph[], int n){
+  unordered_set<int> visited;
+  for (int node = 0; node < n; node++){
+    if (dfs(node,n, graph, visited)) return true;
   }
   return false;
 }
 
 void solve() {
-  for (int i = 0; i < N; i++) {
-    for (int j = 0; j < N; j++) {
-      cin >> board[i][j];
-    }
+  int n, m;
+  cin >> n >> m;
+  vector<int> graph[n];
+  for (int i = 0; i < m; i++){
+    int u, v;
+    cin >> u >> v;
+    graph[u].push_back(v);
+    graph[v].push_back(u);
+
   }
-  solveSudoku(0, 0);
-  printBoard();
+  cout <<isHamiltonPath(graph, n) << endl;
 }
 
 int main() {
