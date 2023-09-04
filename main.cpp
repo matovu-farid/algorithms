@@ -33,10 +33,9 @@ bool canPlace(int row, int col, int num) {
   return true;
 }
 bool solveSudoku(int row, int col) {
-  if (row == N) {
-    printBoard();
+  if (row == N)
     return true;
-  }
+
   if (col == N)
     return solveSudoku(row + 1, 0);
 
@@ -61,6 +60,7 @@ void solve() {
     }
   }
   solveSudoku(0, 0);
+  printBoard();
 }
 
 int main() {
