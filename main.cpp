@@ -16,11 +16,20 @@ int ways(int n, vector<int>& memo){
   memo[n] =  ways(n - 1, memo) + ways(n - 2, memo);
   return memo[n];
 }
+int ways(int n){
+  int dp[n + 1];
+  fill(dp, dp + n, 0);
+  dp[0] = 1;
+  dp[1] = 2;
+  for (int i = 2; i <= n; i++)
+    dp[i] = dp[i - 1] + dp[i - 2];
+  return dp[n];
+}
 void solve() {
   int n;
   cin >> n;
   vector<int> memo(n + 1, -1);
-  cout << ways(n, memo) << endl;
+  cout << ways(n) << endl;
 }
 
 int main() {
