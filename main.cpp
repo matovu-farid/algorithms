@@ -9,18 +9,26 @@ using ll = long long;
 
 using namespace std;
 
-void solve() {
-  const int n = 10;
-  int nums[n] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-  int dp[n + 1];
-  dp[0] = 0;
-  for (int num = 1; num <= n; num++)
-    dp[num] = dp[num >> 1] + (num & 1);
+// The min number of minutes I assign myself if I can not skip three days in a
+// row.
+int min_minutes(int activities[], int n) {
+  int dp[n];
+  dp[0] = activities[0];
+  dp[1] = activities[1];
+  dp[2] = activities[2];
+  for (int i = 3; i < n; i++)
+    dp[i] = activities[i] +
+            min(min(dp[i - 2], dp[i - 3]), dp[i - 1]);
+  return min(min(dp[n - 2], dp[n - 3]), dp[n - 1]);
+}
 
-  for (int i = 1; i <= n; i++)
-    cout << dp[i] << " ";
-  cout << endl;
-  
+void solve() {
+  int n;
+  cin >> n;
+  int activities[n];
+  for (int i = 0; i < n; i++)
+    cin >> activities[i];
+  cout << min_minutes(activities, n) << endl;
 }
 
 int main() {
