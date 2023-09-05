@@ -13,8 +13,8 @@ void solve() {
   const int n = 10;
   int nums[n] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
   int dp[n + 1];
-  dp[1] = 1;
-  for (int num = 2; num <= n; num++)
+  dp[0] = 0;
+  for (int num = 1; num <= n; num++)
     dp[num] = dp[num >> 1] + (num & 1);
 
   for (int i = 1; i <= n; i++)
