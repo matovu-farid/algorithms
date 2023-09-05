@@ -17,9 +17,8 @@ int min_minutes(int activities[], int n) {
   dp[1] = activities[1];
   dp[2] = activities[2];
   for (int i = 3; i < n; i++)
-    dp[i] = activities[i] +
-            min(min(dp[i - 2], dp[i - 3]), dp[i - 1]);
-  return min(min(dp[n - 2], dp[n - 3]), dp[n - 1]);
+    dp[i] = activities[i] + min({dp[i - 2], dp[i - 3], dp[i - 1]});
+  return min({dp[n - 2], dp[n - 3], dp[n - 1]});
 }
 
 void solve() {
