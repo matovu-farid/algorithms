@@ -1,3 +1,4 @@
+#include <algorithm>
 #ifndef ONLINE_JUDGE
 #include "store/print.h"
 #endif
@@ -9,14 +10,17 @@ using ll = long long;
 using namespace std;
 
 void solve() {
-  int n;
-  cin >> n;
-  int count = 0;
-  while (n){
-    if (n & 1) count++;
-    n >>= 1;
-  }
-  cout << count << endl;
+  const int n = 10;
+  int nums[n] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  int dp[n + 1];
+  dp[1] = 1;
+  for (int num = 2; num <= n; num++)
+    dp[num] = dp[num >> 1] + (num & 1);
+
+  for (int i = 1; i <= n; i++)
+    cout << dp[i] << " ";
+  cout << endl;
+  
 }
 
 int main() {
