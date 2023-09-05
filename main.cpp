@@ -9,16 +9,23 @@ using ll = long long;
 
 using namespace std;
 
-// The min number of minutes I assign myself if I can not skip three days in a
-// row.
-int min_minutes(int activities[], int n) {
+int max_money(int activities[], int n) {
   int dp[n];
-  dp[0] = activities[0];
-  dp[1] = activities[1];
-  dp[2] = activities[2];
-  for (int i = 3; i < n; i++)
-    dp[i] = activities[i] + min({dp[i - 2], dp[i - 3], dp[i - 1]});
-  return min({dp[n - 2], dp[n - 3], dp[n - 1]});
+  int max_prev[n];
+  dp[0] = max_prev[0] = activities[0];
+  dp[1]  = max_prev[1]= activities[1] + activities[0];
+
+  dp[2] = activities[2] + max(activities[1], activities[0]);
+  max_prev[2] = max(dp[2], dp[1]);
+
+
+  for (int i = 3; i < n; i++){
+    
+
+    dp[i] = activities[i] + max({dp[i - 2], max_prev[i - 3] + activities[i - 1]});
+    max_prev[i] = max(max_prev[i - 1], dp[i]);
+  }
+  return max({dp[n - 2], dp[n - 1]});
 }
 
 void solve() {
@@ -27,7 +34,7 @@ void solve() {
   int activities[n];
   for (int i = 0; i < n; i++)
     cin >> activities[i];
-  cout << min_minutes(activities, n) << endl;
+  cout << max_money(activities, n) << endl;
 }
 
 int main() {
