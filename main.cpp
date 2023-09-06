@@ -1,4 +1,6 @@
+#include <algorithm>
 #include <climits>
+#include <unordered_map>
 #ifndef ONLINE_JUDGE
 #include "store/print.h"
 #endif
@@ -8,27 +10,42 @@
 using ll = long long;
 
 using namespace std;
+const int N = 1e5;
 
-int max_amount(int n, int nums[]){
-  int dp[n + 1];
-  dp[1] = nums[0];
-  for (int i = 2; i <= n; i++){
-    dp[i] = nums[i - 1];
-    for (int j = 1; j < i; j++){
-      dp[i] = max(dp[i], (nums[j - 1] + dp[i - j]));
+// https://www.spoj.com/problems/ABA12C/
+
+int get_apples(int k, unordered_map<int, int> &apples
+              ) {
+  vector<int> dp(k + 1,N);
+  dp[0] = 0;
+  for (int i = 1; i <= k; i++){
+    for(auto x: apples){
+       int weight = x.first;
+       int price = x.second;
+      if(i >= weight){
+        dp[i] = min(dp[i],price + dp[i - weight]); 
+      }
+
     }
   }
-  return dp[n];
-
+  if(dp[k] == N) return -1;
+  return dp[k];
 }
 void solve() {
-  int n;
-  cin >> n;
-  int nums[n];
-  for (int i = 0; i < n; i++)
-    cin >> nums[i];
-  cout << max_amount(n, nums) << endl;
+  int n, k;
+  cin >> n >> k;
+  vector<int> apples;
+  unordered_map<int, int> map;
+  for (int i = 0; i < k; i++) {
+    int x;
+    cin >> x;
+    if (x == -1)
+      continue;
+    map[i + 1] = x;
+  }
 
+  cout << get_apples(k, map) << endl;
+ 
 }
 
 int main() {
