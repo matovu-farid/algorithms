@@ -1,6 +1,3 @@
-#include <algorithm>
-#include <climits>
-#include <unordered_map>
 #ifndef ONLINE_JUDGE
 #include "store/print.h"
 #endif
@@ -9,43 +6,41 @@
 #include <vector>
 using ll = long long;
 
+// https://codeforces.com/problemset/problem/1091/D
 using namespace std;
-const int N = 1e5;
+vector<ll> dp(1e5, 0);
 
-// https://www.spoj.com/problems/ABA12C/
 
-int get_apples(int k, unordered_map<int, int> &apples
-              ) {
-  vector<int> dp(k + 1,N);
-  dp[0] = 0;
-  for (int i = 1; i <= k; i++){
-    for(auto x: apples){
-       int weight = x.first;
-       int price = x.second;
-      if(i >= weight){
-        dp[i] = min(dp[i],price + dp[i - weight]); 
-      }
+const int MOD = 998244353;
+long long fact(int n){
+  if(dp[n]) return dp[n];
 
-    }
-  }
-  if(dp[k] == N) return -1;
-  return dp[k];
+  if (n <= 1) return 1;
+  dp[n] =  (n * fact(n - 1)) % MOD;
+  return dp[n];
+
+}
+ll power(int n, int p){
+  if(p == 0) return 1;
+  if(p == 1) return n;
+  if (p & 1) return (n * power(n , p - 1)) % MOD;
+  ll temp  = (power(n, p / 2)) % MOD;
+  return (temp * temp) % MOD;
+
 }
 void solve() {
-  int n, k;
-  cin >> n >> k;
-  vector<int> apples;
-  unordered_map<int, int> map;
-  for (int i = 0; i < k; i++) {
-    int x;
-    cin >> x;
-    if (x == -1)
-      continue;
-    map[i + 1] = x;
-  }
+  int n;
+  cin >> n;
+  dp.resize(n + 1, 0);
+  ll total = (n * fact(n)) % MOD ;
+  ll decreasingSuffixes = 0;
+  for(int k = 1; k < n; k ++){
+    decreasingSuffixes += ((fact(n) * power(fact(k), MOD - 2))) % MOD ;
 
-  cout << get_apples(k, map) << endl;
- 
+  }
+  decreasingSuffixes %= MOD;
+  ll res = (total - decreasingSuffixes + MOD) % MOD;
+  cout << res << endl;
 }
 
 int main() {
@@ -56,11 +51,7 @@ int main() {
   ios::sync_with_stdio(0);
   cin.tie(0);
 
-  int tests;
-  cin >> tests;
-  while (tests--) {
-    solve();
-  }
 
+    solve();
   return 0;
 }
