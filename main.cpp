@@ -1,3 +1,4 @@
+#include <climits>
 #ifndef ONLINE_JUDGE
 #include "store/print.h"
 #endif
@@ -7,25 +8,28 @@
 using ll = long long;
 
 using namespace std;
-// https://www.spoj.com/problems/ACODE/
-void solve(string s) {
-  int n = s.length();
-  ll dp[n + 1];
-  dp[0] = 1;
-  dp[1] = 1;
-  int charCode = stoi(s.substr(0, 2));
-  if (charCode <= 26 && charCode >= 11 && charCode != 20)
-    dp[1] += 1;
-  for (int i = 2; i <= n; i++) {
-    dp[i] = 0;
-    if (s[i] != '0' )
-      dp[i] += dp[i - 1];
-    int charCode = stoi(s.substr(i - 1, 2));
-    if ( charCode <= 26 && charCode >= 10) {
-      dp[i] += dp[i - 2];
+
+int max_amount(int n, int nums[]){
+  int dp[n + 1];
+  dp[0] = 0;
+  dp[1] = nums[0];
+  for (int i = 2; i <= n; i++){
+    dp[i] = nums[i - 1];
+    for (int j = 1; j < i; j++){
+      dp[i] = max(dp[i], (nums[j - 1] + dp[i - j]));
     }
   }
-  cout << dp[n] << endl;
+  return dp[n];
+
+}
+void solve() {
+  int n;
+  cin >> n;
+  int nums[n];
+  for (int i = 0; i < n; i++)
+    cin >> nums[i];
+  cout << max_amount(n, nums) << endl;
+
 }
 
 int main() {
@@ -35,12 +39,11 @@ int main() {
 #endif
   ios::sync_with_stdio(0);
   cin.tie(0);
-  string s;
 
-  cin >> s;
-  while (s != "0") {
-    solve(s);
-    cin >> s;
+  int tests;
+  cin >> tests;
+  while (tests--) {
+    solve();
   }
 
   return 0;
