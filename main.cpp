@@ -11,7 +11,6 @@ using namespace std;
 
 int max_amount(int n, int nums[]){
   int dp[n + 1];
-  dp[0] = 0;
   dp[1] = nums[0];
   for (int i = 2; i <= n; i++){
     dp[i] = nums[i - 1];
