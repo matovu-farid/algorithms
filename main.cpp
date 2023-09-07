@@ -9,16 +9,22 @@ using ll = long long;
 
 using namespace std;
 
-int gcd(int n, int m){
-  if (m == 0) return n;
-  return gcd(m, n % m);
+// find values or x and y such that, ax + by = gcd(a, b)
+vector<int> extended_gcd(int a, int b){
+  if (b == 0) 
+    return {1, 0};
+  vector<int> res = extended_gcd(b, a % b);
+  int x = res[1];
+  int y =res[0] - (a / b) * x;
+  return {x, y};
 }
 
 void solve() {
-  int n, m;
-  cin >> n >> m;
-  if (m > n) swap(n, m);
-  cout << gcd(n, m) << endl;
+  int a, b;
+  cin >> a >> b;
+  if (b > a) swap(a, b);
+  auto res  = extended_gcd(a, b);
+  cout << res[0] << " " << res[1] << endl;
   
 }
 
