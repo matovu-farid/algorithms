@@ -1,4 +1,3 @@
-#include <unordered_set>
 #ifndef ONLINE_JUDGE
 #include "store/print.h"
 #endif
@@ -9,23 +8,38 @@ using ll = long long;
 
 using namespace std;
 
-// find values or x and y such that, ax + by = gcd(a, b)
-vector<int> extended_gcd(int a, int b) {
-  if (b == 0)
-    return {1, 0, a};
-  vector<int> res = extended_gcd(b, a % b);
-  int x = res[1];
-  int y = res[0] - (a / b) * x;
-  return {x, y, res[2]};
+// Given a SUM and an array of non negative numbers. Determine if the subset of the array exists with a sum equals to SUM
+
+// f(x, y) -> can we make a sum of y from index x...n, where n is the array length 
+// f (x, y) = f(x + 1, y') or f(x + 1, y), y' = y - array[x]
+// Either we can make the sum at using the element at the current idx or we cant
+bool hasSumHelper(int SUM, vector<int> &array, int idx,
+                  vector<vector<int>> &memo) {
+  if (SUM == 0)
+    return true;
+  if (SUM < 0 || idx >= array.size())
+    return false;
+  if (memo[idx][SUM] != -1)
+    return memo[idx][SUM];
+  memo[idx][SUM] = hasSumHelper(SUM - array[idx], array, idx + 1, memo) ||
+                   hasSumHelper(SUM, array, idx + 1, memo);
+  return memo[idx][SUM];
+}
+
+bool hasSum(int SUM, vector<int> &array) {
+  vector<vector<int>> memo(array.size(), vector<int>(SUM + 1, -1));
+  bool res = hasSumHelper(SUM, array, 0, memo);
+  return res;
 }
 
 void solve() {
-  int a, b;
-  cin >> a >> b;
-  if (b > a)
-    swap(a, b);
-  auto res = extended_gcd(a, b);
-  cout << res[0] << " " << res[1] << " " << res[2] << endl;
+  int SUM, n;
+  cin >> SUM;
+  cin >> n;
+  vector<int> array(n);
+  for (int i = 0; i < n; i++)
+    cin >> array[i];
+  cout << hasSum(SUM, array) << endl;
 }
 
 int main() {
