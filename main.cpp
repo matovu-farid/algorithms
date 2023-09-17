@@ -10,25 +10,26 @@ using namespace std;
 
 // Given a SUM and an array of non negative numbers. Determine if the subset of the array exists with a sum equals to SUM
 
-// f(x, y) -> can we make a sum of y from index x...n, where n is the array length 
-// f (x, y) = f(x + 1, y') or f(x + 1, y), y' = y - array[x]
+// f(x, y) -> can we make a sum of y from index 0...x, where n is the array length 
+// f (x, y) = f(x - 1, y') or f(x - 1, y), y' = y - array[x]
 // Either we can make the sum at using the element at the current idx or we cant
 bool hasSumHelper(int SUM, vector<int> &array, int idx,
                   vector<vector<int>> &memo) {
   if (SUM == 0)
     return true;
-  if (SUM < 0 || idx >= array.size())
+  if (SUM < 0 || idx < 0)
     return false;
   if (memo[idx][SUM] != -1)
     return memo[idx][SUM];
-  memo[idx][SUM] = hasSumHelper(SUM - array[idx], array, idx + 1, memo) ||
-                   hasSumHelper(SUM, array, idx + 1, memo);
+  memo[idx][SUM] = hasSumHelper(SUM - array[idx], array, idx - 1, memo) ||
+                   hasSumHelper(SUM, array, idx - 1, memo);
   return memo[idx][SUM];
 }
 
 bool hasSum(int SUM, vector<int> &array) {
-  vector<vector<int>> memo(array.size(), vector<int>(SUM + 1, -1));
-  bool res = hasSumHelper(SUM, array, 0, memo);
+  int n = array.size();
+  vector<vector<int>> memo(n, vector<int>(SUM + 1, -1));
+  bool res = hasSumHelper(SUM, array, n - 1, memo);
   return res;
 }
 
