@@ -9,22 +9,6 @@ using ll = long long;
 
 using namespace std;
 
-void traceback(v<v<int>> &dp, v<int> &array, int SUM) {
-  int n = array.size();
-  v<int> path;
-  int i = n;
-  int j = SUM;
-  while (i > 0 && j > 0 && dp[i][j] == 1) {
-    if (j >= array[i - 1] && dp[i - 1][j - array[i - 1]] == 1) {
-      j -= array[i - 1];
-      path.push_back(array[i - 1]);
-    }
-    i -= 1;
-  }
-  for (int num : path)
-    cout << num << " ";
-  cout << "\n";
-}
 // Given a SUM and an array of non negative numbers. Determine if the subset of
 // the array exists with a sum equals to SUM
 
@@ -34,21 +18,16 @@ void traceback(v<v<int>> &dp, v<int> &array, int SUM) {
 
 bool hasSum(int SUM, vector<int> &array) {
   int n = array.size();
-  v<v<int>> dp(n + 1, v<int>(SUM + 1));
-  // we can always make a sum of zero
-  for (int i = 0; i <= n; i++)
-    dp[i][0] = 1;
-  // if array is empty we can not make a sum > 0
-  for (int j = 1; j <= SUM; j++)
-    dp[0][j] = 0;
+  v<int> dp(SUM + 1);
+  dp[0] = 1;
   for (int i = 1; i <= n; i++)
-    for (int j = 1; j <= SUM; j++) {
-      dp[i][j] = dp[i - 1][j];
-      if (j >= array[i - 1])
-        dp[i][j] |= dp[i - 1][j - array[i - 1]];
+    for (int j = SUM; j >= 1; j--) {
+      if (j >= array[i - 1]){
+        dp[j] |= dp[j - array[i - 1]];
+        
+      }
     }
-  traceback(dp, array, SUM);
-  return dp[n][SUM];
+  return dp[SUM];
 }
 
 void solve() {
