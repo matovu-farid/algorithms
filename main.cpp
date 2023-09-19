@@ -34,6 +34,10 @@ bool moduloSum(int n, int m, vector<int> &a) {
 void solve() {
   int n, m;
   cin >> n >> m;
+  if (n > m){
+    cout << "YES" << endl;
+    return;
+  }
   vector<int> seq(n);
   for (int i = 0; i < n; i++) {
     cin >> seq[i];
