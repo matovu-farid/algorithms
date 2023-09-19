@@ -11,30 +11,31 @@ using ll = long long;
 using namespace std;
 // https://codeforces.com/problemset/problem/577/B
 bool moduloSum(int n, int m, vector<int> &a) {
-  vector<vector<int>> dp(n + 1, vector<int>(m, 0));
+  vector<int> dp(m, 0);
 
   for (int i = 1; i <= n; i++) {
-    int num = a[i - 1];
-    if (num < m)
-      dp[i][num] = true;
-  }
-  for (int i = 1; i <= n; i++) {
+    vector<int> new_dp(m, 0);
+    new_dp = dp;
+
     for (int j = 0; j < m; j++) {
-      dp[i][j] |= dp[i - 1][j];
-      if (dp[i - 1][j]) {
+      if (dp[j]) {
         int k = (j + a[i - 1] % m) % m;
-        dp[i][k] = 1;
+        new_dp[k] = 1;
       }
     }
+    int num = a[i - 1];
+    if (num < m)
+      new_dp[num] = 1;
+    dp = new_dp;
     // print(dp);
   }
 
-  return dp[n][0];
+  return dp[0];
 }
 void solve() {
   int n, m;
   cin >> n >> m;
-  if (n > m){
+  if (n > m) {
     cout << "YES" << endl;
     return;
   }
