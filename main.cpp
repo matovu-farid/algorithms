@@ -1,41 +1,47 @@
+#include <ostream>
+#include <unordered_set>
 #ifndef ONLINE_JUDGE
 #include "store/print.h"
 #endif
 
 #include <iostream>
 #include <vector>
-#define v vector
 using ll = long long;
 
 using namespace std;
+// https://codeforces.com/problemset/problem/577/B
+bool moduloSum(int n, int m, vector<int> &a) {
+  vector<vector<int>> dp(n + 1, vector<int>(m, 0));
 
-// Given a SUM and an array of non negative numbers. Determine if the subset of
-// the array exists with a sum equals to SUM
-
-// f(x, y) -> can we make a sum of y from the first x elements, where n is the
-// array length f (x, y) = f(x - 1, y') or f(x - 1, y), y' = y - array[x] Either
-// we can make the sum at using the element at the current idx or we can't
-
-bool hasSum(int SUM, vector<int> &array) {
-  int n = array.size();
-  v<int> dp(SUM + 1);
-  dp[0] = 1;
-  for (int i = 1; i <= n; i++)
-    for (int j = SUM; j >= 1; j--) {
-      if (j >= array[i - 1])
-        dp[j] |= dp[j - array[i - 1]];
+  for (int i = 1; i <= n; i++) {
+    int num = a[i - 1];
+    if (num < m)
+      dp[i][num] = true;
+  }
+  for (int i = 1; i <= n; i++) {
+    for (int j = 0; j < m; j++) {
+      dp[i][j] |= dp[i - 1][j];
+      if (dp[i - 1][j]) {
+        int k = (j + a[i - 1] % m) % m;
+        dp[i][k] = 1;
+      }
     }
-  return dp[SUM];
-}
+    // print(dp);
+  }
 
+  return dp[n][0];
+}
 void solve() {
-  int SUM, n;
-  cin >> SUM;
-  cin >> n;
-  vector<int> array(n);
-  for (int i = 0; i < n; i++)
-    cin >> array[i];
-  cout << hasSum(SUM, array) << endl;
+  int n, m;
+  cin >> n >> m;
+  vector<int> seq(n);
+  for (int i = 0; i < n; i++) {
+    cin >> seq[i];
+  }
+  if (moduloSum(n, m, seq))
+    cout << "YES" << endl;
+  else
+    cout << "NO" << endl;
 }
 
 int main() {
@@ -46,11 +52,6 @@ int main() {
   ios::sync_with_stdio(0);
   cin.tie(0);
 
-  int tests;
-  cin >> tests;
-  while (tests--) {
-    solve();
-  }
-
+  solve();
   return 0;
 }
