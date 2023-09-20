@@ -7,33 +7,24 @@
 using ll = long long;
 
 using namespace std;
-/*
-Hamming Distance
-The Hamming distance between two integers is the number of positions at which the corresponding bits are different.
 
-Given two integers x and y, return the Hamming distance between them.
-
-Constraints:
-
-0 <= x, y <= 2^31 - 1
-*/
-int count_bits(int n){
-  int count = 0;
-  while(n){
-    n = n & (n - 1);
-    count ++;
-  }
-  return count;
-}
-int hammingDistance(int x, int y) {
-  int diff = x ^ y;
-  return count_bits(diff);
+/* Given 2N + 1 numbers, all the numbers are seen twice in the array exept one
+ * (unique number). Find this unique number
+ */
+int unique_number(vector<int> &nums) {
+  int ans = 0;
+  for (int num : nums)
+    ans ^= num;
+  return ans;
 }
 void solve() {
-  int x, y;
-  cin >> x >> y;
-  cout << hammingDistance(x, y) << endl;
+  int n;
+  cin >> n;
+  vector<int> nums(n);
+  for (int i = 0; i < n; i++)
+    cin >> nums[i];
 
+  cout << unique_number(nums) << endl;
 }
 
 int main() {
