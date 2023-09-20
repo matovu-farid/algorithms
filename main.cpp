@@ -10,9 +10,9 @@ using namespace std;
 
 int count_bits(int n) {
   int count = 0;
-  for (int mask = 1; mask < (1 << 30); mask <<= 1) {
-    if (mask & n)
-      count++;
+  while (n){
+    if(n & 1) count ++;
+    n >>= 1;
   }
   return count;
 }
