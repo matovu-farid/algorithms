@@ -8,27 +8,32 @@ using ll = long long;
 
 using namespace std;
 /*
-Longest Consecutive Run of 1s in Binary
-Given a non-negative integer n, return the length of the longest consecutive run
-of 1s in its binary representation.
-*/
-void solve() {
-  int n;
-  cin >> n;
-  int max_count = 0;
-  int current_count = 0;
-  while (n) {
-    if (n & 1) {
-      current_count++;
-    } else {
-      max_count = max(max_count, current_count);
-      current_count = 0;
-    }
-    n >>= 1;
-  }
-  max_count = max(max_count, current_count);
+Hamming Distance
+The Hamming distance between two integers is the number of positions at which the corresponding bits are different.
 
-  cout << max_count << endl;
+Given two integers x and y, return the Hamming distance between them.
+
+Constraints:
+
+0 <= x, y <= 2^31 - 1
+*/
+int count_bits(int n){
+  int count = 0;
+  while(n){
+    n = n & (n - 1);
+    count ++;
+  }
+  return count;
+}
+int hammingDistance(int x, int y) {
+  int diff = x ^ y;
+  return count_bits(diff);
+}
+void solve() {
+  int x, y;
+  cin >> x >> y;
+  cout << hammingDistance(x, y) << endl;
+
 }
 
 int main() {
