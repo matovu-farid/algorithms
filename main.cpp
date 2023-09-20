@@ -8,18 +8,20 @@ using ll = long long;
 
 using namespace std;
 
-int count_bits(int n) {
-  int count = 0;
-  while (n){
-    n = n & (n - 1);
-    count++;
+int covert_to_binary(int n) {
+  int res = 0;
+  int power = 1;
+  while (n) {
+    res += (n & 1) * power;
+    n >>= 1;
+    power *= 10;
   }
-  return count;
+  return res;
 }
 void solve() {
   int n;
   cin >> n;
-  cout << count_bits(n) << endl;
+  cout << covert_to_binary(n) << endl;
 }
 
 int main() {
