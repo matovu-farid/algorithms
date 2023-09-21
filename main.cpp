@@ -12,25 +12,25 @@ using namespace std;
  * (unique number). Find those two number
  */
 
-vector<int> unique_number_II(vector<int> &nums, int n) {
-  int total_diff = 0;
-  for (int num : nums)
-    total_diff ^= num;
-  int pos = 0;
-  int temp = total_diff;
-  while (!(temp & 1)) {
-    temp >>= 1;
-    pos++;
+int unique_number_III(vector<int> &nums, int n) {
+  
+  int bits = 32;
+  vector<int> num_bits(bits);
+  for (int i = 0; i < bits; i++) {
+    int mask = 1 << i;
+
+    int count = 0;
+    for (int num : nums) {
+      if (num & mask)
+        count++;
+    }
+    num_bits[i] = count % 3;
   }
-  int mask = 1 << pos;
-  int num1 = 0;
-
-  for (int num : nums)
-    if (mask & num)
-      num1 ^= num;
-
-  int num2 = total_diff ^ num1;
-  return {num1, num2};
+  int num = 0;
+  for(int i = 0; i < bits; i++){
+    num +=  num_bits[i] * (1 << i);
+  }
+  return num;
 }
 void solve() {
   int n;
@@ -39,8 +39,8 @@ void solve() {
   for (int i = 0; i < n; i++)
     cin >> nums[i];
 
-  vector<int> uni = unique_number_II(nums, n);
-  print(uni);
+  int num = unique_number_III(nums, n);
+  cout << num << endl;
 }
 
 int main() {
