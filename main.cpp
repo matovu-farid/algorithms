@@ -8,20 +8,45 @@ using ll = long long;
 
 using namespace std;
 
-void subsets(string s) {
-  int n = s.length();
-  for (int mask = 0; mask < (1 << n); mask++) {
-    for (int i = 0; i < n; i++)
-      if (mask & (1 << i))
-        cout << s[i] << " ";
-
-    cout << endl;
+int matrixScore(vector<vector<int>> grid) {
+  int n = grid.size(), m = grid[0].size();
+  for (int i = 0; i < n; i++){
+    if(grid[i][0] == 0){
+      for (int j = 0; j < m; j++)
+        grid[i][j] ^= 1;
+    }
   }
+  vector<int> counts(m,0);
+  for (int j = 0; j < m; j++){
+    for(int i = 0; i < n; i++){
+      if(grid[i][j] == 1){
+        counts[j]++;
+      }
+    }
+  }
+  for(int j = 0; j < m; j++){
+    if(counts[j] > (n / 2)) continue;
+    for(int i = 0; i < n; i++)
+      grid[i][j] ^= 1;
+  }
+  int total = 0;
+  for(int i = 0; i < n; i++){
+    int num = 0;
+    for (int j = 0; j < m; j++){
+      int k = m - j - 1;
+
+      num += grid[i][j] * (1 << k);
+    }
+    total += num;
+  }
+  
+  return total;
+    
 }
 void solve() {
-  string s;
-  cin >> s;
-  subsets(s);
+  vector<vector<int>> grid = {{0,0,1,1},{ 1,0,1,0 },{ 1,1,0,0 }};
+  int score = matrixScore(grid);
+  cout << score << endl;
 }
 
 int main() {
@@ -30,12 +55,7 @@ int main() {
 #endif
   ios::sync_with_stdio(0);
   cin.tie(0);
-
-  int tests;
-  cin >> tests;
-  while (tests--) {
-    solve();
-  }
+  solve();
 
   return 0;
 }
