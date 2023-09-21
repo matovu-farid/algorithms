@@ -4,49 +4,50 @@
 
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 using ll = long long;
 
+/* 
+ * Triples with Bitwise AND Equal To Zero
+ * Given an integer array nums, return the number of AND triples.
+ *
+ * An AND triple is a triple of indices (i, j, k) such that:
+ *
+ * 0 <= i < nums.length
+ *
+ * 0 <= j < nums.length
+ *
+ * 0 <= k < nums.length
+ *
+ * nums[i] & nums[j] & nums[k] == 0, where & represents the bitwise-AND operator.
+ */
 using namespace std;
-
-int matrixScore(vector<vector<int>> grid) {
-  int n = grid.size(), m = grid[0].size();
-  for (int i = 0; i < n; i++){
-    if(grid[i][0] == 0){
-      for (int j = 0; j < m; j++)
-        grid[i][j] ^= 1;
+ 
+    int countTriplets(vector<int>& nums) {
+        int n = nums.size();
+        unordered_map<int, int> pairAnd;
+        
+        // Calculate AND for every pair and store in map
+        for(int i = 0 ; i < n ; i++){
+            for(int j = 0 ; j < n ; j++){
+                pairAnd[nums[i] & nums[j]]++;
+            }
+        }
+ 
+        int ans = 0;
+        // Iterate over the map and then over the list
+        for(auto &[andResult, count] : pairAnd){
+            for(int num : nums){
+                if((andResult & num) == 0) {
+                    ans += count;
+                }
+            }
+        }
+        return ans;
     }
-  }
-  vector<int> counts(m,0);
-  for (int j = 0; j < m; j++){
-    for(int i = 0; i < n; i++){
-      if(grid[i][j] == 1){
-        counts[j]++;
-      }
-    }
-  }
-  for(int j = 0; j < m; j++){
-    if(counts[j] > (n / 2)) continue;
-    for(int i = 0; i < n; i++)
-      grid[i][j] ^= 1;
-  }
-  int total = 0;
-  for(int i = 0; i < n; i++){
-    int num = 0;
-    for (int j = 0; j < m; j++){
-      int k = m - j - 1;
-
-      num += grid[i][j] * (1 << k);
-    }
-    total += num;
-  }
-  
-  return total;
-    
-}
 void solve() {
-  vector<vector<int>> grid = {{0,0,1,1},{ 1,0,1,0 },{ 1,1,0,0 }};
-  int score = matrixScore(grid);
-  cout << score << endl;
+  vector<int> nums = { 2,1,3 };
+  cout << countTriplets(nums)<< endl;
 }
 
 int main() {
@@ -55,7 +56,12 @@ int main() {
 #endif
   ios::sync_with_stdio(0);
   cin.tie(0);
-  solve();
+
+  int tests;
+  cin >> tests;
+  while (tests--) {
+    solve();
+  }
 
   return 0;
 }
