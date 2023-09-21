@@ -4,50 +4,39 @@
 
 #include <iostream>
 #include <vector>
-#include <unordered_map>
 using ll = long long;
 
-/* 
- * Triples with Bitwise AND Equal To Zero
- * Given an integer array nums, return the number of AND triples.
- *
- * An AND triple is a triple of indices (i, j, k) such that:
- *
- * 0 <= i < nums.length
- *
- * 0 <= j < nums.length
- *
- * 0 <= k < nums.length
- *
- * nums[i] & nums[j] & nums[k] == 0, where & represents the bitwise-AND operator.
- */
 using namespace std;
- 
-    int countTriplets(vector<int>& nums) {
-        int n = nums.size();
-        unordered_map<int, int> pairAnd;
-        
-        // Calculate AND for every pair and store in map
-        for(int i = 0 ; i < n ; i++){
-            for(int j = 0 ; j < n ; j++){
-                pairAnd[nums[i] & nums[j]]++;
-            }
-        }
- 
-        int ans = 0;
-        // Iterate over the map and then over the list
-        for(auto &[andResult, count] : pairAnd){
-            for(int num : nums){
-                if((andResult & num) == 0) {
-                    ans += count;
-                }
-            }
-        }
-        return ans;
+/* 
+Total Hamming Distance
+The Hamming distance between two integers is the number of positions at which the corresponding bits are different.
+
+Given an integer array nums, return the sum of Hamming distances between all the pairs of the integers in nums.
+*/
+int count_bits(int n) {
+  int count = 0;
+  while (n) {
+    n = n & (n - 1);
+    count++;
+  }
+  return count;
+}
+int totalHammingDistance(vector<int> nums) {
+  int res = 0;
+  int n = nums.size();
+  for (int i = 0; i < n - 1; i++) {
+    for (int j = i + 1; j < n; j++) {
+      int diff = (nums[i] ^ nums[j]);
+      int distance = count_bits(diff);
+
+      res += distance;
     }
+  }
+  return res;
+}
 void solve() {
-  vector<int> nums = { 2,1,3 };
-  cout << countTriplets(nums)<< endl;
+  vector<int> nums = {4, 14, 2};
+  cout << totalHammingDistance(nums);
 }
 
 int main() {
