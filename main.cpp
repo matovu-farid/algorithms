@@ -1,3 +1,4 @@
+#include <climits>
 #ifndef ONLINE_JUDGE
 #include "store/print.h"
 #endif
@@ -7,28 +8,35 @@
 using ll = long long;
 
 using namespace std;
-/* 
-Total Hamming Distance
-The Hamming distance between two integers is the number of positions at which the corresponding bits are different.
 
-Given an integer array nums, return the sum of Hamming distances between all the pairs of the integers in nums.
-*/
-
-int totalHammingDistance(vector<int> nums) {
-  int res = 0;
-  int n = nums.size();
-  for (int i = 0; i < 32; i++){
-    int count = 0;
-    for(int num: nums){
-      if(num & (1 << i)) count++;
-    }
-    res += count * (n - count);
+int tsp(vector<vector<int>>& dist, int visited, int city, int n,  vector<vector<int>>& memo){
+  if(visited == (1 << n) - 1){
+    return dist[city][0];
   }
-  return res;
+  if(memo[visited][city] != -1) return memo[visited][city];
+
+  int min_cost = INT_MAX;
+  for (int next_city = 0; next_city < n; next_city++){
+    if(visited & (1 << next_city)) continue;
+    int cost = dist[city][next_city] + tsp(dist, visited | (1 << city), next_city, n, memo);
+    min_cost = min(min_cost, cost);
+
+  }
+  memo[visited][city] = min_cost;
+  return min_cost ;
 }
 void solve() {
-  vector<int> nums = {4, 14, 2};
-  cout << totalHammingDistance(nums);
+  vector<vector<int>> dist = {
+    {0, 20, 42, 25},
+    {20, 0, 30, 34},
+    {42, 30, 0, 10},
+    {25, 34, 10, 0}
+  };
+  int n = 4;
+  vector<vector<int>> memo((1 << n), vector<int>(n, -1));
+  int res = tsp(dist, 0, 0, n, memo);
+  cout << res << endl;
+  
 }
 
 int main() {
@@ -37,12 +45,7 @@ int main() {
 #endif
   ios::sync_with_stdio(0);
   cin.tie(0);
-
-  int tests;
-  cin >> tests;
-  while (tests--) {
-    solve();
-  }
+  solve();
 
   return 0;
 }
