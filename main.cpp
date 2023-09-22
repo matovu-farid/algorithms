@@ -1,4 +1,3 @@
-#include <climits>
 #ifndef ONLINE_JUDGE
 #include "store/print.h"
 #endif
@@ -8,35 +7,45 @@
 using ll = long long;
 
 using namespace std;
+/*
+ Decode Permutation
+There is an integer array perm that is a permutation of the first n positive integers, where n is always odd.
 
-int tsp(vector<vector<int>>& dist, int visited, int city, int n,  vector<vector<int>>& memo){
-  if(visited == (1 << n) - 1){
-    return dist[city][0];
-  }
-  if(memo[visited][city] != -1) return memo[visited][city];
+It was encoded into another integer array encoded of length n - 1, such that encoded[i] = perm[i] XOR perm[i + 1]. For example, if perm = [1,3,2], then encoded = [2,1].
 
-  int min_cost = INT_MAX;
-  for (int next_city = 0; next_city < n; next_city++){
-    if(visited & (1 << next_city)) continue;
-    int cost = dist[city][next_city] + tsp(dist, visited | (1 << city), next_city, n, memo);
-    min_cost = min(min_cost, cost);
+Given the encoded array, return the original array perm. It is guaranteed that the answer exists and is unique.
+ */
+vector<int> decode(vector<int> encoded) {
+    int n = encoded.size() + 1; // Length of the original perm array
+    vector<int> perm(n); // Initialize the original array
 
-  }
-  memo[visited][city] = min_cost;
-  return min_cost ;
+    // Find the XOR of all elements from 1 to n
+    int XOR_all = 0;
+    for (int i = 1; i <= n; ++i) {
+        XOR_all ^= i;
+    }
+
+    // Find the XOR of the encoded array, skipping every other element
+    int XOR_encoded = 0;
+    for (int i = 1; i < encoded.size(); i += 2) {
+        XOR_encoded ^= encoded[i];
+    }
+
+    // Find the first element in the original perm array
+    perm[0] = XOR_all ^ XOR_encoded;
+
+    // Use the first element to decode the rest of the array
+    for (int i = 0; i < encoded.size(); ++i) {
+        perm[i + 1] = perm[i] ^ encoded[i];
+    }
+
+    return perm;
 }
 void solve() {
-  vector<vector<int>> dist = {
-    {0, 20, 42, 25},
-    {20, 0, 30, 34},
-    {42, 30, 0, 10},
-    {25, 34, 10, 0}
-  };
-  int n = 4;
-  vector<vector<int>> memo((1 << n), vector<int>(n, -1));
-  int res = tsp(dist, 0, 0, n, memo);
-  cout << res << endl;
-  
+
+  vector<int> encoded = {3, 1};
+  vector<int> output = decode(encoded);
+  print(output);
 }
 
 int main() {
