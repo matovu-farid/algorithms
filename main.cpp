@@ -7,71 +7,77 @@
 using ll = long long;
 
 using namespace std;
-#include <iostream>
-#include <vector>
-#include <queue>
-#include <utility>
-#include <limits>
 
-using namespace std;
 
-vector<int> dijkstra(const vector<vector<pair<int, int>>>& graph, int source) {
-    int n = graph.size();
-    vector<int> distance(n, INT_MAX);  // Initialize distances to "infinity"
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
 
+
+struct Edge {
+    int from, to, weight;
+};
+
+bool bellmanFord(const vector<Edge>& edges, int numVertices, int source, vector<int>& distance) {
+    distance = vector<int>(numVertices, INT_MAX);
     distance[source] = 0;
-    pq.push({0, source});
 
-    while (!pq.empty()) {
-        int dist_u = pq.top().first;
-        int u = pq.top().second;
-        pq.pop();
-
-        // Ignore outdated entries in priority queue
-        if (dist_u > distance[u]) continue;
-
-        for (const auto& neighbor : graph[u]) {
-            int v = neighbor.first;
-            int weight = neighbor.second;
-
-            // Relaxation step
-            if (distance[u] + weight < distance[v]) {
+    // Relax edges repeatedly
+    for (int i = 1; i <= numVertices - 1; ++i) {
+        for (const auto& edge : edges) {
+            int u = edge.from;
+            int v = edge.to;
+            int weight = edge.weight;
+            if (distance[u] != INT_MAX && distance[u] + weight < distance[v]) {
                 distance[v] = distance[u] + weight;
-                pq.push({distance[v], v});
             }
         }
     }
 
-    return distance;
+    // Check for negative weight cycles
+    for (const auto& edge : edges) {
+        int u = edge.from;
+        int v = edge.to;
+        int weight = edge.weight;
+        if (distance[u] != INT_MAX && distance[u] + weight < distance[v]) {
+            // Negative weight cycle detected
+            return false;
+        }
+    }
+
+    return true;
 }
-
-
 
 void solve() {
-// Define graph as an adjacency list: graph[u] contains pairs (v, w) such that there is an edge from u to v with weight w
-    vector<vector<pair<int, int>>> graph = {
-        {{1, 2}, {2, 4}},  // neighbors of vertex 0
-        {{2, 1}, {3, 7}},  // neighbors of vertex 1
-        {{3, 5}},          // neighbors of vertex 2
-        {{4, 1}},          // neighbors of vertex 3
-        {}                // neighbors of vertex 4
+    // Define the graph using edges (from, to, weight)
+    vector<Edge> edges = {
+        {0, 1, 1},
+        {0, 2, -14},
+        {1, 2, 2},
+        {1, 3, 7},
+        {2, 4, 3},
+        {4, 3, 5},
+        {3, 4, 2}
     };
 
+    int numVertices = 5;
     int source = 0;
-    vector<int> distance = dijkstra(graph, source);
+    vector<int> distance;
 
-    cout << "Shortest distances from vertex " << source << ":\n";
-    for (int i = 0; i < distance.size(); ++i) {
-        cout << "Distance to vertex " << i << ": ";
-        if (distance[i] == INT_MAX) {
-            cout << "infinity";
-        } else {
-            cout << distance[i];
+    if (bellmanFord(edges, numVertices, source, distance)) {
+        cout << "Shortest distances from vertex " << source << ":\n";
+        for (int i = 0; i < distance.size(); ++i) {
+            cout << "Distance to vertex " << i << ": ";
+            if (distance[i] == INT_MAX) {
+                cout << "infinity";
+            } else {
+                cout << distance[i];
+            }
+            cout << endl;
         }
-        cout << endl;
+    } else {
+        cout << "Negative weight cycle detected!\n";
     }
+
 }
+
 
 int main() {
 #ifndef ONLINE_JUDGE
