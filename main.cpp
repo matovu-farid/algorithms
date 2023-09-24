@@ -7,45 +7,70 @@
 using ll = long long;
 
 using namespace std;
-/*
- Decode Permutation
-There is an integer array perm that is a permutation of the first n positive integers, where n is always odd.
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <utility>
+#include <limits>
 
-It was encoded into another integer array encoded of length n - 1, such that encoded[i] = perm[i] XOR perm[i + 1]. For example, if perm = [1,3,2], then encoded = [2,1].
+using namespace std;
 
-Given the encoded array, return the original array perm. It is guaranteed that the answer exists and is unique.
- */
-vector<int> decode(vector<int> encoded) {
-    int n = encoded.size() + 1; // Length of the original perm array
-    vector<int> perm(n); // Initialize the original array
+vector<int> dijkstra(const vector<vector<pair<int, int>>>& graph, int source) {
+    int n = graph.size();
+    vector<int> distance(n, INT_MAX);  // Initialize distances to "infinity"
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
 
-    // Find the XOR of all elements from 1 to n
-    int XOR_all = 0;
-    for (int i = 1; i <= n; ++i) {
-        XOR_all ^= i;
+    distance[source] = 0;
+    pq.push({0, source});
+
+    while (!pq.empty()) {
+        int dist_u = pq.top().first;
+        int u = pq.top().second;
+        pq.pop();
+
+        // Ignore outdated entries in priority queue
+        if (dist_u > distance[u]) continue;
+
+        for (const auto& neighbor : graph[u]) {
+            int v = neighbor.first;
+            int weight = neighbor.second;
+
+            // Relaxation step
+            if (distance[u] + weight < distance[v]) {
+                distance[v] = distance[u] + weight;
+                pq.push({distance[v], v});
+            }
+        }
     }
 
-    // Find the XOR of the encoded array, skipping every other element
-    int XOR_encoded = 0;
-    for (int i = 1; i < encoded.size(); i += 2) {
-        XOR_encoded ^= encoded[i];
-    }
-
-    // Find the first element in the original perm array
-    perm[0] = XOR_all ^ XOR_encoded;
-
-    // Use the first element to decode the rest of the array
-    for (int i = 0; i < encoded.size(); ++i) {
-        perm[i + 1] = perm[i] ^ encoded[i];
-    }
-
-    return perm;
+    return distance;
 }
-void solve() {
 
-  vector<int> encoded = {3, 1};
-  vector<int> output = decode(encoded);
-  print(output);
+
+
+void solve() {
+// Define graph as an adjacency list: graph[u] contains pairs (v, w) such that there is an edge from u to v with weight w
+    vector<vector<pair<int, int>>> graph = {
+        {{1, 2}, {2, 4}},  // neighbors of vertex 0
+        {{2, 1}, {3, 7}},  // neighbors of vertex 1
+        {{3, 5}},          // neighbors of vertex 2
+        {{4, 1}},          // neighbors of vertex 3
+        {}                // neighbors of vertex 4
+    };
+
+    int source = 0;
+    vector<int> distance = dijkstra(graph, source);
+
+    cout << "Shortest distances from vertex " << source << ":\n";
+    for (int i = 0; i < distance.size(); ++i) {
+        cout << "Distance to vertex " << i << ": ";
+        if (distance[i] == INT_MAX) {
+            cout << "infinity";
+        } else {
+            cout << distance[i];
+        }
+        cout << endl;
+    }
 }
 
 int main() {
