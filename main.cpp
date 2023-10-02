@@ -1,3 +1,4 @@
+#include <utility>
 #ifndef ONLINE_JUDGE
 #include "store/print.h"
 #endif
@@ -8,76 +9,37 @@ using ll = long long;
 
 using namespace std;
 
+int knapsack(vector<pair<int, int>> items, int N, int S){
+  vector<vector<int>> dp(N+1, vector<int>(S + 1, 0));
+  for (int i = 1; i <= N; i++ ){
+    for (int j = 0; j <= S; j++){
+      dp[i][j] = dp[i - 1][j];
+      auto item = items[i - 1];
+      if(j - item.first >= 0){
+       
+        dp[i][j] = max(dp[i][j], dp[i - 1][j - item.first] + item.second);
+      }
 
-
-
-struct Edge {
-    int from, to, weight;
-};
-
-bool bellmanFord(const vector<Edge>& edges, int numVertices, int source, vector<int>& distance) {
-    distance = vector<int>(numVertices, INT_MAX);
-    distance[source] = 0;
-
-    // Relax edges repeatedly
-    for (int i = 1; i <= numVertices - 1; ++i) {
-        for (const auto& edge : edges) {
-            int u = edge.from;
-            int v = edge.to;
-            int weight = edge.weight;
-            if (distance[u] != INT_MAX && distance[u] + weight < distance[v]) {
-                distance[v] = distance[u] + weight;
-            }
-        }
     }
-
-    // Check for negative weight cycles
-    for (const auto& edge : edges) {
-        int u = edge.from;
-        int v = edge.to;
-        int weight = edge.weight;
-        if (distance[u] != INT_MAX && distance[u] + weight < distance[v]) {
-            // Negative weight cycle detected
-            return false;
-        }
-    }
-
-    return true;
+  }
+  return dp[N][S];
 }
 
 void solve() {
-    // Define the graph using edges (from, to, weight)
-    vector<Edge> edges = {
-        {0, 1, 1},
-        {0, 2, -14},
-        {1, 2, 2},
-        {1, 3, 7},
-        {2, 4, 3},
-        {4, 3, 5},
-        {3, 4, 2}
-    };
-
-    int numVertices = 5;
-    int source = 0;
-    vector<int> distance;
-
-    if (bellmanFord(edges, numVertices, source, distance)) {
-        cout << "Shortest distances from vertex " << source << ":\n";
-        for (int i = 0; i < distance.size(); ++i) {
-            cout << "Distance to vertex " << i << ": ";
-            if (distance[i] == INT_MAX) {
-                cout << "infinity";
-            } else {
-                cout << distance[i];
-            }
-            cout << endl;
-        }
-    } else {
-        cout << "Negative weight cycle detected!\n";
-    }
-
+  int S, N;
+  cin >> S >> N;
+  vector<pair<int, int>> items(N);
+  for (int i = 0; i < N; i++) {
+    cin >> items[i].first >> items[i].second;
+  }
+  cout << knapsack(items, N,  S) << endl;
+  
+  // for(auto p: items) {
+  //   print(p);
+  //   cout << endl;
+  // }
+  
 }
-
 
 int main() {
 #ifndef ONLINE_JUDGE

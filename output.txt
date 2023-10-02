@@ -1,7 +1,2 @@
-Shortest distances from vertex 0:
-Distance to vertex 0: 0
-Distance to vertex 1: 1
-Distance to vertex 2: -14
-Distance to vertex 3: -6
-Distance to vertex 4: -11
+13
 
