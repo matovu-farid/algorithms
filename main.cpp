@@ -12,7 +12,7 @@ using namespace std;
 int knapsack(vector<pair<int, int>> items, int N, int S) {
   vector<int> dp(S + 1, 0);
   for (int i = 1; i <= N; i++) {
-    for (int j = S; j >= 0; j--) {
+    for (int j = 0; j <= S; j++) {
       auto item = items[i - 1];
       if (j - item.first >= 0)
         dp[j] = max(dp[j], dp[j - item.first] + item.second);
