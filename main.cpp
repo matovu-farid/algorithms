@@ -1,4 +1,4 @@
-#include <utility>
+#include <climits>
 #ifndef ONLINE_JUDGE
 #include "store/print.h"
 #endif
@@ -9,28 +9,40 @@ using ll = long long;
 
 using namespace std;
 
-int knapsack(vector<pair<int, int>> items, int N, int S) {
-  vector<int> dp(S + 1, 0);
-  for (int i = 1; i <= N; i++) {
-    for (int j = 0; j <= S; j++) {
-      auto item = items[i - 1];
-      if (j - item.first >= 0)
-        dp[j] = max(dp[j], dp[j - item.first] + item.second);
+//Problem statement
+// https://codeforces.com/problemset/problem/698/A
+
+vector<vector<int>> A = {{0}, {1, 0}, {2, 0}, {0, 1, 2}};
+int dp(int i, int prev, vector<int> &days, vector<vector<int>> &memo ) {
+  if (i >= days.size())
+    return 0;
+  if (memo[i][prev] != -1)
+    return memo[i][prev];
+  int ans = INT_MAX;
+  for (int c : A[days[i]]) {
+    if (c != prev || c == 0) {
+      int curr = dp(i + 1, c, days, memo);
+      if (c == 0) curr += 1;
+      ans = min(ans, curr);
     }
+
   }
-  return dp[S];
+  return  memo[i][prev] = ans;
 }
 
 void solve() {
-  int S, N;
-  cin >> S >> N;
-  vector<pair<int, int>> items(N);
-  for (int i = 0; i < N; i++) {
-    cin >> items[i].first >> items[i].second;
-  }
-  cout << knapsack(items, N, S) << endl;
+  int n;
+  cin >> n;
+  vector<int> days(n);
+  vector<vector<int>> memo(n, vector<int>(3, -1));
+  vector<string> chosen(n) ;
+  
 
- 
+  for (int i = 0; i < n; i++)
+    cin >> days[i];
+  int ans = dp(0, 0, days, memo);
+  cout << ans <<  endl;
+  // print(memo);
 }
 
 int main() {
