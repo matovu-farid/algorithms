@@ -1,5 +1,5 @@
-#include <climits>
-#ifndef ONLINE_JUDGE
+#include <algorithm>
+#ifndef online_judge
 #include "store/print.h"
 #endif
 
@@ -8,43 +8,66 @@
 using ll = long long;
 
 using namespace std;
-
-//Problem statement
-// https://codeforces.com/problemset/problem/698/A
-
-vector<vector<int>> A = {{0}, {1, 0}, {2, 0}, {0, 1, 2}};
-int dp(int i, int prev, vector<int> &days, vector<vector<int>> &memo ) {
-  if (i >= days.size())
-    return 0;
-  if (memo[i][prev] != -1)
-    return memo[i][prev];
-  int ans = INT_MAX;
-  for (int c : A[days[i]]) {
-    if (c != prev || c == 0) {
-      int curr = dp(i + 1, c, days, memo);
-      if (c == 0) curr += 1;
-      ans = min(ans, curr);
-    }
-
+struct Point {
+  int x;
+  int y;
+  friend ostream &operator<<(ostream &os, const Point &p) {
+    os << "(" << p.x << ", " << p.y << ")";
+    return os;
   }
-  return  memo[i][prev] = ans;
+  bool operator<(Point p) const {
+    if (x == p.x)
+      return y < p.y;
+    return x < p.x;
+  }
+};
+int angle(Point a, Point b, Point c) {
+  return a.x * (c.y - b.y) + b.x * (a.y - c.y) + c.x * (b.y - a.y);
 }
+bool clockwise(Point a, Point b, Point c) { return angle(a, b, c) > 0; }
+bool anti_clockwise(Point a, Point b, Point c) { return angle(a, b, c) < 0; }
 
+vector<Point> convex_hull(vector<Point> &points) {
+  int n = points.size();
+
+  sort(points.begin(), points.end());
+  Point first = points[0], last = points.back();
+  vector<Point> up, down;
+  up.push_back(first);
+  down.push_back(first);
+  for (int i = 1; i < n; i++) {
+    if (i == n - 1 || clockwise(first, points[i], last)) {
+      while (up.size() >= 2 &&
+             !clockwise(up[up.size() - 2], up[up.size() - 1], points[i])) {
+        up.pop_back();
+      }
+      up.push_back(points[i]);
+    }
+    if (i == n - 1 || anti_clockwise(first, points[i], last)) {
+      while (down.size() >= 2 &&
+             !anti_clockwise(down[down.size() - 2], down[down.size() - 1],
+                             points[i])) {
+        down.pop_back();
+      }
+      down.push_back(points[i]);
+    }
+  }
+  vector<Point> res(up.begin(), up.end());
+  for (int i = 1; i < down.size() - 1; i++) {
+    res.push_back(down[i]);
+  }
+  return res;
+}
 void solve() {
   int n;
   cin >> n;
-  vector<int> days(n);
-  vector<vector<int>> memo(n, vector<int>(3, -1));
-  vector<string> chosen(n) ;
-  
-
+  vector<Point> points(n);
   for (int i = 0; i < n; i++)
-    cin >> days[i];
-  int ans = dp(0, 0, days, memo);
-  cout << ans <<  endl;
-  // print(memo);
-}
+    cin >> points[i].x >> points[i].y;
 
+  auto res = convex_hull(points);
+  print(res);
+}
 int main() {
 #ifndef ONLINE_JUDGE
   freopen("input.txt", "r", stdin);
