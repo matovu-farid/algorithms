@@ -1,5 +1,5 @@
 import sys
-from collections import  deque
+from collections import  Counter, deque
 class Graph:
     def __init__(self, jobs):
         self.nodes = {}
@@ -11,9 +11,7 @@ class Graph:
         self.nodes[u].append(v)
     def topological_sort(self):
         queue = deque()
-        indegree = {}
-        for node in self.nodes:
-            indegree[node] = 0
+        indegree = Counter()
         for dep in self.nodes:
             for job in self.nodes[dep]: 
                 indegree[job] += 1
