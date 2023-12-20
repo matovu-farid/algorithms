@@ -4,58 +4,60 @@
 
 #include <iostream>
 #include <vector>
-using ll = long long;
-/**
-  *
-You are given an array of n pairs pairs where pairs[i] = [lefti, righti] and
-lefti < righti.
+using ll = long long int;
 
-A pair p2 = [c, d] follows a pair p1 = [a, b] if b < c. A chain of pairs can be
-formed in this fashion.
-
-Return the length longest chain which can be formed.
-
-You do not need to use up all the given intervals. You can select pairs in any
-order. Example 1:
-
-Injut: pairs = [[1,2],[2,3],[3,4]]
-Output: 2
-Explanation: The longest chain is [1,2] -> [3,4].
-Example 2:
-
-Input: pairs = [[1,2],[7,8],[4,5]]
-Output: 3
-Explanation: The longest chain is [1,2] -> [4,5] -> [7,8].
-*/
-typedef vector<int> vii;
-class Solution {
-public:
-  static bool comparator(vii a, vii b) {
-    if (a[1] == b[1])
-      return a[0] < b[0];
-    return a[1] < b[1];
-  }
-  int findLongestChain(vector<vii> &pairs) {
-    sort(pairs.begin(), pairs.end(), comparator);
-    int res = 1;
-    int last = pairs[0][1];
-    for (int i = 1; i < pairs.size(); ++i) {
-      if (last < pairs[i][0]) {
-        res += 1;
-        last = pairs[i][1];
-      }
-    }
-    return res;
-  }
-};
 using namespace std;
-void solve() {
-  // vector<vector<int>> pairs = {{1, 2}, {7, 8}, {4, 5}};
-  // vector<vector<int>> pairs = {{1, 2}, {7, 8}, {4, 5}};
-  vector<vector<int>> pairs = {{1, 2}, {2, 3}, {3, 4}};
+long long int p = 31, mod = 1e9 + 7;
 
-  Solution s;
-  cout << s.findLongestChain(pairs) << endl;
+long long int poly_hash(string s) {
+  long long int hash = 0;
+  long long int p_power = 1;
+  for (auto c : s) {
+    hash += ((c - 'a' + 1) * p_power);
+    p_power *= p;
+    hash %= mod;
+    p_power %= mod;
+  }
+  return hash;
+}
+long long int power(long long int a, int n) {
+  long long int res = 1;
+  while (n){
+    if(n & 1) {
+      res *= a;
+      res %= mod;
+    }
+    a *= a;
+    a %= mod;
+    n >>= 1;
+  }
+  return res;
+}
+int inverse(int x){
+  return power(x, mod - 2) % mod;
+}
+bool search(string s, string pattern) {
+  int k = pattern.length();
+  int patternHash = poly_hash(pattern);
+  long long int hash = poly_hash(s.substr(0, k));
+  auto p_inverse = inverse(p);
+  auto p_power = power(p, k - 1) % mod;
+
+  int i = 0;
+  while (patternHash != hash and i + k - 1 < s.size()) {
+    hash = (hash - (s[i] - 'a' + 1) + mod) % mod;
+    i += 1;
+    hash *= p_inverse;
+    hash += ((s[i + k - 1] - 'a' + 1) * p_power);
+    hash %= mod;
+  }
+  return patternHash == hash;
+}
+void solve() {
+  string s = "ababcaba";
+  string p = "ca";
+  cout << search(s, p) << endl;
+  cout << power(2, 3) << endl;
 }
 int main() {
 #ifndef ONLINE_JUDGE
