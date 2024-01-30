@@ -1,6 +1,6 @@
 {
   "zenMode.silentNotifications": true,
-  "zenMode.hideTabs": true,
+  "zenMode.showTabs": "single",
   
  
 

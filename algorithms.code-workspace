@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": ".leetcode",
+			"path": "../../.leetcode"
+		}
+	],
+	"settings": {
+		"zenMode.silentNotifications": true,
+		"zenMode.showTabs": "single",
+		"files.associations": {
+			"string": "cpp",
+			"ostream": "cpp",
+			"iostream": "cpp",
+			"vector": "cpp",
+			"iosfwd": "cpp"
+		}
+	}
+}
